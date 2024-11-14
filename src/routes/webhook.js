@@ -1,3 +1,8 @@
+/**
+ * Express router to handle webhook events.
+ * @module routes/webhook
+ */
+
 const express = require('express');
 const logger = require('../utils/logger');
 const { fetchMovieDetails } = require('../services/tmdbService');
@@ -5,6 +10,20 @@ const { sendMovieMessage } = require('../services/telegramService');
 
 const router = express.Router();
 
+/**
+ * POST /webhook
+ * Handles incoming webhook events from Plex.
+ * 
+ * @name POST /webhook
+ * @function
+ * @memberof module:routes/webhook
+ * @param {Object} req - Express request object
+ * @param {Object} req.body - The body of the request
+ * @param {string} req.body.payload - The payload containing event data
+ * @param {Object} res - Express response object
+ * @returns {void}
+ * @throws Will throw an error if there is an issue sending the message to Telegram
+ */
 router.post('/', async (req, res) => {
     var payload = JSON.parse(req.body.payload);
 

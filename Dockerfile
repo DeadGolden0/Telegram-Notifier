@@ -1,16 +1,16 @@
-# Utiliser une image Node.js
+# Use a Node.js image
 FROM node:18
 
-# Créer un dossier de travail
+# Create a working directory
 WORKDIR /app
 
-# Copier les fichiers de l'application
+# Copy application files
 COPY package*.json ./
 RUN npm install
 COPY . .
 
-# Exposer le port de l'application
+# Expose the application port
 EXPOSE 8100
 
-# Commande pour démarrer l'application
+# Command to start the application
 CMD ["node", "src/app.js"]
