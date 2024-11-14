@@ -30,14 +30,14 @@ TMDB_API_KEY=
 
 ## 🖥️ Usage
 
-# Using Node.js
+### Using Node.js
 Start the server with:
 
 ```bash
 Node .
 ```
 
-# Using Docker
+### Using Docker
 Start the service with Docker Compose:
 
 ```bash
