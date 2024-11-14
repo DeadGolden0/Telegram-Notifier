@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    build: .
+    environment:
+      - PORT=8100
+      - TELEGRAM_TOKEN=
+      - TELEGRAM_CHAT_ID=
+      - TMDB_API_KEY=
+    ports:
+      - "8100:8100"

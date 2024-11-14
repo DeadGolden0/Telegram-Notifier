@@ -1,0 +1,16 @@
+{
+  "name": "bobyland-notifier",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "grammy": "^1.31.3",
+    "picocolors": "^1.1.1"
+  }
+}
