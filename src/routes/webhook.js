@@ -5,10 +5,12 @@
 
 const express = require('express');
 const logger = require('../utils/logger');
+const multer = require('multer');
 const { fetchMovieDetails } = require('../services/tmdbService');
 const { sendMovieMessage } = require('../services/telegramService');
 
 const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 /**
  * POST /webhook
@@ -24,7 +26,7 @@ const router = express.Router();
  * @returns {void}
  * @throws Will throw an error if there is an issue sending the message to Telegram
  */
-router.post('/', async (req, res) => {
+router.post('/', upload.single('thumb'), async (req, res) => {
     var payload = JSON.parse(req.body.payload);
 
     if (payload.event === 'library.new') {
