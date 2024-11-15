@@ -27,20 +27,48 @@ const upload = multer({ storage: multer.memoryStorage() });
  * @throws Will throw an error if there is an issue sending the message to Telegram
  */
 router.post('/', upload.single('thumb'), async (req, res) => {
-    var payload = JSON.parse(req.body.payload);
-
-    if (payload.event === 'library.new') {
-        try {
-            const movieDatas = await fetchMovieDetails(payload.Metadata.title);
-    
-            await sendMovieMessage(movieDatas);
-            res.sendStatus(200);
-        } catch (error) {
-            logger.error(`🔴 Erreur lors de l\'envoi du message à Telegram pour le film ${movieDatas.title}:`, error);
-            res.status(500).send('Erreur lors de l\'envoi du message');
+    try {
+        // Parse the payload
+        if (!req.body.payload) {
+            logger.error('🔴 Payload is missing in the request body.');
+            return res.status(400).send('Payload is missing.');
         }
-    } else {
-        res.sendStatus(200);
+
+        let payload;
+        try {
+            payload = JSON.parse(req.body.payload);
+        } catch (parseError) {
+            logger.error('🔴 Failed to parse payload:', parseError);
+            return res.status(400).send('Invalid payload format.');
+        }
+
+        // Handle only 'library.new' events
+        if (payload.event === 'library.new') {
+            if (!payload.Metadata || !payload.Metadata.title) {
+                logger.error('🔴 Metadata or title is missing in the payload.');
+                return res.status(400).send('Metadata or title is missing.');
+            }
+
+            try {
+                // Fetch movie details and send message
+                const movieDatas = await fetchMovieDetails(payload.Metadata.title);
+                if (!movieDatas) {
+                    logger.error(`🔴 No movie details found for title: ${payload.Metadata.title}`);
+                    return res.status(404).send('Movie details not found.');
+                }
+
+                await sendMovieMessage(movieDatas);
+                res.sendStatus(200);
+            } catch (serviceError) {
+                logger.error(`🔴 Error while processing movie ${payload.Metadata.title}:`, serviceError);
+                res.status(500).send('Error processing movie details.');
+            }
+        } else {
+            res.sendStatus(200); // Ignore other events
+        }
+    } catch (error) {
+        logger.error('🔴 Unexpected error occurred:', error);
+        res.status(500).send('An unexpected error occurred.');
     }
 });
 
