@@ -23,9 +23,9 @@ async function sendMessage(movieDatas, type) {
             caption: description,
             parse_mode: 'Markdown'
         });
-        logger.success(`🟢 Message envoyé à Telegram pour le film : ${movieDatas.title}`);
+        logger.success(`🟢 Message envoyé à Telegram pour le film : ${type === 'Film' ? movieDatas.title : movieDatas.name}`);
     } catch (error) {
-        logger.error(`🔴 Erreur lors de l\'envoi du message à Telegram pour le film ${movieDatas.title}:`, error);
+        logger.error(`🔴 Erreur lors de l\'envoi du message à Telegram pour le film ${type === 'Film' ? movieDatas.title : movieDatas.name}:`, error);
     }
 }
 
@@ -39,7 +39,7 @@ async function getDesc(movieDatas, type) {
     const text = `
 🎬 *Nouveautés sur la TV DE MAITRE BOBY* 🎬
 
-🎥 *Titre:* ${movieDatas.title}
+🎥 *Titre:* ${type === 'Film' ? movieDatas.title : movieDatas.name}
 🎥 *Type:* ${type}
 ⭐ *Note:* ${movieDatas.vote_average.toFixed(1)}/10
 📅 *Date de sortie:* ${formattedDate}
