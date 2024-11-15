@@ -6,7 +6,7 @@
 const express = require('express');
 const logger = require('../utils/logger');
 const multer = require('multer');
-const { fetchMovieDetails } = require('../services/tmdbService');
+const { fetchMovieDetails, fetchTvshowDetails } = require('../services/tmdbService');
 const { sendMessage } = require('../services/telegramService');
 
 const router = express.Router();

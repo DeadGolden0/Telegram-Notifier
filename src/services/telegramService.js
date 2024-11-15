@@ -35,6 +35,7 @@ async function getPoster(path) {
 
 async function getDesc(movieDatas, type) {
     const formattedDate = new Date(movieDatas.release_date).toLocaleDateString('fr-FR');
+    const getGenreName = type === 'Film' ? getGenreMovieName : getGenreTvName;
     const text = `
 🎬 *Nouveautés sur la TV DE MAITRE BOBY* 🎬
 
@@ -42,7 +43,7 @@ async function getDesc(movieDatas, type) {
 🎥 *Type:* ${type}
 ⭐ *Note:* ${movieDatas.vote_average.toFixed(1)}/10
 📅 *Date de sortie:* ${formattedDate}
-🎞 *Genre:* ${movieDatas.genre_ids.map(id => getGenreMovieName(id)).join(', ')}
+🎞 *Genre:* ${movieDatas.genre_ids.map(id => getGenreName(id)).join(', ')}
 
 🎭 *Synopsis:* 
 
