@@ -36,6 +36,12 @@ async function getPoster(path) {
 async function getDesc(movieDatas, type) {
     const formattedDate = new Date(movieDatas.release_date).toLocaleDateString('fr-FR');
     const getGenreName = type === 'Film' ? getGenreMovieName : getGenreTvName;
+
+    const truncatedOverview = movieDatas.overview.length > 500 
+    ? movieDatas.overview.slice(0, 500) + '...' 
+    : movieDatas.overview;
+
+
     const text = `
 🎬 *Nouveautés sur la TV DE MAITRE BOBY* 🎬
 
@@ -47,7 +53,7 @@ async function getDesc(movieDatas, type) {
 
 🎭 *Synopsis:* 
 
-${movieDatas.overview}
+${truncatedOverview}
 
 👀 *Ne ratez pas cette occasion de (re)découvrir ce chef-d'oeuvre !* #NouveautéSurPlex
     `;
