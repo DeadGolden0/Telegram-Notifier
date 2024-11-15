@@ -7,7 +7,7 @@ const express = require('express');
 const logger = require('../utils/logger');
 const multer = require('multer');
 const { fetchMovieDetails } = require('../services/tmdbService');
-const { sendMovieMessage } = require('../services/telegramService');
+const { sendMessage } = require('../services/telegramService');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -28,43 +28,52 @@ const upload = multer({ storage: multer.memoryStorage() });
  */
 router.post('/', upload.single('thumb'), async (req, res) => {
     try {
-        // Parse the payload
-        if (!req.body.payload) {
+        const { payload } = req.body;
+        if (!payload) {
             logger.error('🔴 Payload is missing in the request body.');
             return res.status(400).send('Payload is missing.');
         }
 
-        let payload;
+        let parsedPayload;
         try {
-            payload = JSON.parse(req.body.payload);
+            parsedPayload = JSON.parse(payload);
         } catch (parseError) {
             logger.error('🔴 Failed to parse payload:', parseError);
             return res.status(400).send('Invalid payload format.');
         }
 
-        // Handle only 'library.new' events
-        if (payload.event === 'library.new') {
-            if (!payload.Metadata || !payload.Metadata.title) {
-                logger.error('🔴 Metadata or title is missing in the payload.');
-                return res.status(400).send('Metadata or title is missing.');
+        const { event, Metadata } = parsedPayload;
+        if (event !== 'library.new') {
+            return res.sendStatus(200); // Ignore other events
+        }
+
+        if (!Metadata || !Metadata.title) {
+            logger.error('🔴 Metadata or title is missing in the payload.');
+            return res.status(400).send('Metadata or title is missing.');
+        }
+
+        const { title, type } = Metadata;
+        let details;
+        try {
+            if (type === 'movie') {
+                details = await fetchMovieDetails(title);
+            } else if (type === 'show') {
+                details = await fetchTvshowDetails(title);
+            } else {
+                logger.error(`🔴 Unsupported media type: ${type}`);
+                return res.status(400).send('Unsupported media type.');
             }
 
-            try {
-                // Fetch movie details and send message
-                const movieDatas = await fetchMovieDetails(payload.Metadata.title);
-                if (!movieDatas) {
-                    logger.error(`🔴 No movie details found for title: ${payload.Metadata.title}`);
-                    return res.status(404).send('Movie details not found.');
-                }
-
-                await sendMovieMessage(movieDatas);
-                res.sendStatus(200);
-            } catch (serviceError) {
-                logger.error(`🔴 Error while processing movie ${payload.Metadata.title}:`, serviceError);
-                res.status(500).send('Error processing movie details.');
+            if (!details) {
+                logger.error(`🔴 No details found for title: ${title}`);
+                return res.status(404).send('Details not found.');
             }
-        } else {
-            res.sendStatus(200); // Ignore other events
+
+            await sendMessage(details, type === 'movie' ? 'Film' : 'Série');
+            res.sendStatus(200);
+        } catch (serviceError) {
+            logger.error(`🔴 Error while processing ${type} ${title}:`, serviceError);
+            res.status(500).send('Error processing media details.');
         }
     } catch (error) {
         logger.error('🔴 Unexpected error occurred:', error);

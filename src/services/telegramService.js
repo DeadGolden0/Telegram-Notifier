@@ -1,5 +1,6 @@
 const logger = require('../utils/logger');
-const { getGenreName } = require('../utils/genreUtils');
+const { getGenreMovieName } = require('../utils/genreUtils');
+const { getGenreTvName } = require('../utils/genreUtils');
 
 /**
  * Sends a message with a movie poster to a Telegram chat.
@@ -14,9 +15,9 @@ const { telegramToken, telegramChatId } = require('../config');
 
 const bot = new Bot(telegramToken);
 
-async function sendMovieMessage(movieDatas) {
-    const imageUrl = await getMoviePoster(movieDatas.poster_path);
-    const description = await getMovieDesc(movieDatas);
+async function sendMessage(movieDatas, type) {
+    const imageUrl = await getPoster(movieDatas.poster_path);
+    const description = await getDesc(movieDatas, type);
     try {
         await bot.api.sendPhoto(telegramChatId, imageUrl, {
             caption: description,
@@ -28,20 +29,20 @@ async function sendMovieMessage(movieDatas) {
     }
 }
 
-async function getMoviePoster(path) {
+async function getPoster(path) {
     return `https://image.tmdb.org/t/p/w500${path}`;
 }
 
-async function getMovieDesc(movieDatas) {
+async function getDesc(movieDatas, type) {
     const formattedDate = new Date(movieDatas.release_date).toLocaleDateString('fr-FR');
     const text = `
 🎬 *Nouveautés sur la TV DE MAITRE BOBY* 🎬
 
 🎥 *Titre:* ${movieDatas.title}
-🎥 *Type:* Film
+🎥 *Type:* ${type}
 ⭐ *Note:* ${movieDatas.vote_average.toFixed(1)}/10
 📅 *Date de sortie:* ${formattedDate}
-🎞 *Genre:* ${movieDatas.genre_ids.map(id => getGenreName(id)).join(', ')}
+🎞 *Genre:* ${movieDatas.genre_ids.map(id => getGenreMovieName(id)).join(', ')}
 
 🎭 *Synopsis:* 
 
@@ -52,4 +53,4 @@ ${movieDatas.overview}
     return text;
 }
 
-module.exports = { sendMovieMessage };
+module.exports = { sendMessage };
