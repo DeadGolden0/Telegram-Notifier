@@ -34,7 +34,7 @@ async function getPoster(path) {
 }
 
 async function getDesc(movieDatas, type) {
-    const formattedDate = new Date(type === 'Film' ? movieDatas.release_date : first_air_date).toLocaleDateString('fr-FR');
+    const formattedDate = new Date(type === 'Film' ? movieDatas.release_date : movieDatas.first_air_date).toLocaleDateString('fr-FR');
     const getGenreName = type === 'Film' ? getGenreMovieName : getGenreTvName;
 
     const truncatedOverview = movieDatas.overview.length > 500 
