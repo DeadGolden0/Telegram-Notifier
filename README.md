@@ -1,6 +1,6 @@
-## 🌐 Plex Notifier
+## 🌐 Telegram Notifier
 
-Welcome to the **Plex Notifier** repository! This is a simple Node.js Express API that automatically sends a message to a Telegram bot whenever a new film is available on Plex (via Plex webhooks).
+Welcome to the **Telegram Notifier** repository! This is a simple Node.js Express API that automatically sends a message to a Telegram bot whenever a new film is available on Plex or Jellyfin (via Plex webhooks).
 
 ## 📋 Prerequisites
 
@@ -11,8 +11,8 @@ Welcome to the **Plex Notifier** repository! This is a simple Node.js Express AP
 ## ⚙️ Installation
 
 ```bash
-git clone https://github.com/DeadGolden0/Plex-Notifier
-cd Plex-Notifier
+git clone https://github.com/DeadGolden0/Telegram-Notifier
+cd Telegram-Notifier
 ```
 
 ## 📋 Configuration
