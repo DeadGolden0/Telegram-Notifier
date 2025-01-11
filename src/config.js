@@ -12,4 +12,5 @@ module.exports = {
     telegramToken: process.env.TELEGRAM_TOKEN,
     telegramChatId: process.env.TELEGRAM_CHAT_ID,
     tmdbApiKey: process.env.TMDB_API_KEY,
+    serviceType: process.env.SERVICE_TYPE
 };
