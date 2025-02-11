@@ -35,7 +35,6 @@ async function getPoster(path) {
 
 async function getDesc(movieDatas, type) {
     const formattedDate = new Date(type === 'Film' ? movieDatas.release_date : movieDatas.first_air_date).toLocaleDateString('fr-FR');
-    const getGenreName = type === 'Film' ? getGenreMovieName : getGenreTvName;
 
     const truncatedOverview = movieDatas.overview.length > 500 
     ? movieDatas.overview.slice(0, 500) + '...' 
@@ -49,7 +48,7 @@ async function getDesc(movieDatas, type) {
 🎥 *Type:* ${type}
 ⭐ *Note:* ${movieDatas.vote_average.toFixed(1)}/10
 📅 *Date de sortie:* ${formattedDate}
-🎞 *Genre:* ${movieDatas.genre_ids.map(id => getGenreName(id)).join(', ')}
+🎞 *Genre:* ${movieDatas.genres.map(genre => genre.name).join(', ')}
 
 🎭 *Synopsis:* 
 

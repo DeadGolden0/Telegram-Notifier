@@ -12,5 +12,6 @@ module.exports = {
     telegramToken: process.env.TELEGRAM_TOKEN,
     telegramChatId: process.env.TELEGRAM_CHAT_ID,
     tmdbApiKey: process.env.TMDB_API_KEY,
-    serviceType: process.env.SERVICE_TYPE
+    serviceType: "Jellyseerr", // JellySeerr or Jellyfin or Plex (case-sensitive)
+    tmdbLanguage: "fr-FR", // The language for TMDB API responses (e.g., "en-US", "fr-FR")
 };
