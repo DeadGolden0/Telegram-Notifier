@@ -26,7 +26,7 @@ async function handleJellySeerrWebhook(req, res) {
     try {
         if (type.toLowerCase() === 'movie') {
             details = await fetchMovieDetailsByTmdbId(ID);
-        } else if (type.toLowerCase() === 'tvshow') {
+        } else if (type.toLowerCase() === 'tv') {
             details = await fetchTvshowDetailsByTmdbId(ID);
         } else {
             logger.error(`🔴 Type de média non pris en charge : ${type}`);
